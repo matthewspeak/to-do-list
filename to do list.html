@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family:'verdana';color:black">
+<head>
+	<title>To-Do List</title>
+	<style>
+		body {font-size: 125%;}
+		h1   {font-size: 300%;}
+		p    {font-size: 150%; }
+		.a {
+			width: 500px;
+			height: fit-content;
+  			border-style: solid;
+  			padding: 20px;
+  			border-radius: 25px;
+  			background: #FFFEE8;
+  			font-size: 18px;
+  			font-weight: bold;
+			}
+		div
+		
+	</style>
+</head>
+
+<center>
+
+<div class = "a">
+<h1>To Do List</h1>
+
+
+
+<form name="taskForm" action="" method="GET" autocomplete="off">
+<input type="text" name="taskInput" value="" placeholder="Enter a task!" style="background-color:#FFFFFF;font-family:'verdana';font-size:20px;height:28px;width:325px;text-align:center;color: #000000"><br><br>
+<input type="button" name="submit" value="Submit" onClick="addTask();displayTasks()"; style="font-family:'verdana';font-size:22px;">
+<input type="button" name="clear" value="Clear List" onClick="clearAllTasks()" style="font-family:'verdana';font-size:22px;">
+</form>
+
+<br>
+
+
+<p id=taskDisplayArea> </p> <!--The area where tasks will show-->
+
+
+</div>
+
+<script language = "JavaScript"> // who's ready for    s o m e    J   A   V   A   S   C   R   I   P   T
+
+
+
+let taskArray = [];
+//let timeArray = [];
+//let dateArray = [];
+console.log('taskArray = ' + taskArray); 
+
+
+function retrieveStoredData() //Pulls from existing localStoarge to set taskArray contents. 
+{
+	for (i = 0; i < localStorage.length; i++)
+	{
+		taskArray[i] = localStorage.getItem(i);
+	};
+	console.log('taskArray = ' + taskArray); 
+};
+
+retrieveStoredData();
+
+displayTasks();
+
+//console.log('userData = ' + userData);
+//console.log('taskArray = ' + taskArray); 
+
+function addTask() //Adds a user-submitted new task to the askArray. Called simultaneously with displayTasks upon Submit button.
+{
+	if (taskForm.taskInput.value === '')
+	{
+		alert("Enter a task, ya dingus!");
+	}
+	
+	else if (taskArray.includes(taskForm.taskInput.value))
+	{
+		alert("You already entered this task!");
+	}
+
+	else
+	{
+		taskArray.push(taskForm.taskInput.value);
+
+		for (i = 0; i < taskArray.length; i++)
+		{
+			let localStorageIndex = taskArray[i];
+			localStorage.setItem(i, taskArray[i]);
+		};
+
+	};
+
+	taskForm.taskInput.value = '';
+	console.log('taskArray = ' + taskArray);  
+};
+
+function displayTasks() //Handles the display aspect of displaying a new task. Called simultaneously with addTask upon Submit button onClick.
+{
+	const taskDisplayArea = document.getElementById("taskDisplayArea");
+	taskDisplayArea.innerHTML = '';
+
+	for (i = 0; i < taskArray.length; i++)
+	{
+		document.getElementById("taskDisplayArea").innerHTML += taskArray[i] + ' ' + '<button name="button' + i + '"onclick=removeTask(' + i + ')>x</button>' + '<br>'; 
+
+	};
+	console.log('taskArray = ' + taskArray); 
+
+
+};
+
+function clearAllTasks() //Clears everything.
+{
+	const taskDisplayArea = document.getElementById("taskDisplayArea");
+	taskDisplayArea.innerHTML = '';
+	taskForm.taskInput.value = ''; 
+	taskArray = [];
+	localStorage.clear();
+	console.log('taskArray = ' + taskArray); 
+};
+
+function removeTask(taskNumber) //Removes a specific task using the X button next to the task. 
+{
+	const taskDisplayArea = document.getElementById("taskDisplayArea");
+	taskDisplayArea.innerHTML = '';
+	taskArray.splice(taskNumber, 1);
+	localStorage.clear();
+
+	for (i = 0; i < taskArray.length; i++) //Resets the localStoarge to match what's left in the taskArray.
+	{
+		localStorage.setItem(i, taskArray[i]);
+	};
+
+	console.log('taskArray = ' + taskArray); 
+
+	displayTasks();
+
+	if (taskArray.length === 0)
+	{
+		taskDisplayArea.innerHTML = 'All done!';
+	};
+
+	//setTimeout(taskDisplayArea.innerHTML = '', 1000);
+
+};
+
+</script>
+</center>
+</body>
+</html>
